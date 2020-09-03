@@ -15,4 +15,4 @@ def check_list(c):
   print(count)
 
 a = [1,2,3,4,6,4,5,1,4,10,8,7]
-check_list(a)
+check_list(a) 

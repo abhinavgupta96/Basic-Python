@@ -13,7 +13,7 @@ def sort_list(l1,l2):
     result.append(j)
   print (result)
 
-sort_list(l,l2)
+sort_list(l1,l2)
 
 ##Normal approach
 
