@@ -136,6 +136,25 @@ class LinkedList :
             temp.next = None
             self.length-=1
             return temp
+        
+    def remove_by_value(self,value):
+        ##this method will search the entire LL and remove the value given to it as a parameter
+        temp = self.head
+        prev = None
+        after = None
+        while temp is not None:
+            if temp.value == value:
+                after = temp.next
+                if prev is None: ##edge case where head is the value given as parameter
+                    self.head = after
+                    temp.next = None
+                else:
+                    prev.next = after
+                    temp.next = None
+                self.length-=1
+                return True
+            prev = temp
+            temp = temp.next
     
     def reverse_ll(self):
         ##reversing self.head and self.tail
