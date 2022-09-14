@@ -44,43 +44,71 @@ class BST :
                 return True
         return False
 
-    def min_value_node(self, current_node):
-        while current_node.left is not None:
-            current_node = current_node.left
-        return current_node.value
-
-    def remove_node(self, value):
-        ##Function working, but better and complete at below link
-        ##See > https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/
+    def inorder_successor(self): #this function is used to create a list with all the nodes in their order of traversal i.e inorder traversal
+        inorder_st = []
+        inorder_list = []
         temp = self.root
-        while (True):
-            if temp.value < value:
-                temp = temp.right
-            elif temp.value > value:
+        while True:
+            if temp is not None:
+                inorder_st.append(temp)
                 temp = temp.left
-            elif temp.value == value:
-                print("Found the value, processing")
-                if temp.left == None and temp.right == None:
-                    temp.value = None
-                    print("Removing the node")
-                    return True
-                else:
-                    print("Cannot remove node as child node exists")
-                    return False
+            elif inorder_st:
+                temp = inorder_st.pop()
+                inorder_list.append(temp.value)
+                temp = temp.right
             else:
-                print("Value not found")
-                return False
+                break
+        return inorder_list
 
+    def find_parent(self,value): #this function helps in finding parent node of a given value
+        temp = self.root
+        parent = None
+        while True:
+            parent = temp
+            if value > temp.value:
+                temp = temp.right
+                if temp.value == value:
+                    return parent
+            elif value < temp.value:
+                temp = temp.left
+                if temp.value == value:
+                    return parent
+            elif value == temp.value:
+                return parent
+        return ("No Parent")
 
-mybst = BST()
-mybst.insert(45)
-mybst.insert(21)
-mybst.insert(17)
-mybst.insert(89)
-mybst.insert(65)
-mybst.insert(39)
-mybst.insert(97)
-mybst.insert(1)
-# print(mybst.min_value_node(mybst.root.right.right))
-#mybst.remove_node(97)
-print(mybst.contains(97))
+            
+    def remove_node(self,value):
+        inorder_list = self.inorder_successor()
+        value_index = inorder_list.index(value)
+        successor = inorder_list[value_index+1] #get the value of successor
+        temp = self.root
+        parent_node = self.find_parent(successor) #get the parent node of successor node, helps in deleting successor node
+        while True:
+            if temp.value > value:
+                temp = temp.left
+            elif temp.value < value:
+                temp = temp.right
+            elif temp.value == value:
+                temp.value = successor
+                if value > parent_node.value: #This allows parent node to delete the successor node from original position as it will now have replaced the deleted node
+                    parent_node.right = None
+                else:
+                    parent_node.left = None
+                return ("Node removed")
+    
+bst = BST()
+bst.insert(37)
+bst.insert(23)
+bst.insert(50)
+bst.insert(16)
+bst.insert(30)
+bst.insert(40)
+bst.insert(70)
+bst.insert(10)
+bst.insert(20)
+bst.insert(38)
+bst.insert(47)
+bst.insert(69)
+bst.insert(100)
+print(bst.remove_node(23))
