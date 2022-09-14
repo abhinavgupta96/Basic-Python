@@ -78,7 +78,7 @@ class BST :
         return ("No Parent")
 
             
-    def remove_node(self,value):
+    def remove_node(self,value): #add logic to handle nodes with single child or no child
         inorder_list = self.inorder_successor()
         value_index = inorder_list.index(value)
         successor = inorder_list[value_index+1] #get the value of successor
