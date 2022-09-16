@@ -1,114 +1,124 @@
 class Node:
-    def __init__(self, value):
+    def __init__(self,value):
         self.value = value
         self.left = None
         self.right = None
-        
-class BST :
 
+class BST:
     def __init__(self):
         self.root = None
-
-    def insert(self, value):
-        new_node = Node(value)
+    
+    def insert(self,value):
+        node = Node(value)
         if self.root is None:
-            self.root = new_node
+            self.root = node
             return True
         temp = self.root
-        while (True): ##we need to return to break out the loop
-            if new_node.value == temp.value:
-                return False
-            if new_node.value > temp.value:
-                if temp.right is not None:
-                    temp = temp.right
-                else:
-                    temp.right = new_node
-                    return True
-            else :
-                if temp.left is not None:
+        while True:
+            if temp.value > node.value:
+                if temp.left:
                     temp = temp.left
                 else:
-                    temp.left = new_node
+                    temp.left = node
                     return True
-
-    def contains(self, value):
-        if self.root is None:
-            return False
+            elif temp.value < node.value:
+                if temp.right :
+                    temp = temp.right
+                else:
+                    temp.right = node
+                    return True
+            else:
+                return None
+    
+    def inorder_successor(self): ##Function that returns list of nodes in their in-order traversal (iteratively)
         temp = self.root
-        while temp is not None:
-            if temp.value > value :
-                temp = temp.left
-            elif temp.value < value:
-                temp = temp.right
-            else :
-                return True
-        return False
-
-    def inorder_successor(self): #this function is used to create a list with all the nodes in their order of traversal i.e inorder traversal
         inorder_st = []
-        inorder_list = []
-        temp = self.root
+        inoder_list = []
         while True:
             if temp is not None:
                 inorder_st.append(temp)
                 temp = temp.left
             elif inorder_st:
                 temp = inorder_st.pop()
-                inorder_list.append(temp.value)
+                inoder_list.append(temp.value)
                 temp = temp.right
             else:
                 break
-        return inorder_list
+        return inoder_list
 
-    def find_parent(self,value): #this function helps in finding parent node of a given value
-        temp = self.root
-        parent = None
-        while True:
-            parent = temp
-            if value > temp.value:
-                temp = temp.right
-                if temp.value == value:
-                    return parent
-            elif value < temp.value:
-                temp = temp.left
-                if temp.value == value:
-                    return parent
-            elif value == temp.value:
-                return parent
-        return ("No Parent")
 
-            
-    def remove_node(self,value): #add logic to handle nodes with single child or no child
-        inorder_list = self.inorder_successor()
-        value_index = inorder_list.index(value)
-        successor = inorder_list[value_index+1] #get the value of successor
+    def find_node(self,value): ##function returns a node if it exists in the tree when value is passed to it
         temp = self.root
-        parent_node = self.find_parent(successor) #get the parent node of successor node, helps in deleting successor node
-        while True:
+        while temp is not None:
             if temp.value > value:
-                temp = temp.left
+                temp = temp.left ##move left regardless of value, if temp is none while condition will take care of it
             elif temp.value < value:
                 temp = temp.right
             elif temp.value == value:
-                temp.value = successor
-                if value > parent_node.value: #This allows parent node to delete the successor node from original position as it will now have replaced the deleted node
-                    parent_node.right = None
-                else:
-                    parent_node.left = None
-                return ("Node removed")
+                return temp
+        return None
+
+            
     
+    def get_parent_node(self,node): ##this function gets the parent node of any given node
+        node = node
+        parent_node = None
+        temp = self.root
+        if node is self.root:
+            return parent_node
+        while node is not None:
+            if temp.value < node.value:
+                if temp.right:
+                    parent_node = temp
+                    temp = temp.right
+            elif temp.value > node.value:
+                if temp.left:
+                    parent_node = temp
+                    temp = temp.left
+            elif temp.value == node.value:
+                return parent_node
+        return None
+
+    def delete_node(self, value): #Function handles deletion of node, can be optimised
+        node = self.find_node(value)
+        parent_node = self.get_parent_node(node)
+        successor_list = self.inorder_successor()
+        deleted_node_index = successor_list.index(value)
+        successor_node = successor_list[deleted_node_index+1]
+        successor_node = self.find_node(successor_node)
+        if node.left or node.right: ##If node has one child
+            if node.left:
+                parent_node.left = successor_node
+                node.left = None
+            else:
+                parent_node.right = successor_node
+                node.right = None
+        elif node.left and node.right: ##If node has 2 children
+            if successor_node.value < parent_node.value:
+                parent_node.left = successor_node
+            else:
+                parent_node.right = successor_node
+            node.right = None
+        else: ##If node is a leaf node
+            if parent_node.left is node:
+                parent_node.left = None
+            else:
+                parent_node.right = None
+        return node
+
+
 bst = BST()
-bst.insert(37)
-bst.insert(23)
 bst.insert(50)
-bst.insert(16)
 bst.insert(30)
-bst.insert(40)
 bst.insert(70)
-bst.insert(10)
-bst.insert(20)
-bst.insert(38)
-bst.insert(47)
-bst.insert(69)
+bst.insert(25)
+bst.insert(45)
+bst.insert(60)
+bst.insert(80)
+bst.insert(5)
+bst.insert(27)
+bst.insert(35)
 bst.insert(100)
-print(bst.remove_node(23))
+print(bst.delete_node(30).value)
+print(bst.root.left.value)
+print(bst.root.left.right.left.value)
