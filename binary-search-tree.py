@@ -1,3 +1,6 @@
+from collections import deque
+
+
 class Node:
     def __init__(self,value):
         self.value = value
@@ -78,6 +81,22 @@ class BST:
         postorder_ll = postorder_ll[::-1]
         return postorder_ll
 
+    def bfs_traversal(self):
+        answer = []
+        q = deque([self.root])
+        while q:
+            curr = []
+            for _ in range(len(q)):
+                node = q.popleft()
+                curr.append(node.value)
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+            answer.append(curr)
+        return answer
+
+
     def find_node(self,value): ##function returns a node if it exists in the tree when value is passed to it
         temp = self.root
         while temp is not None:
@@ -153,3 +172,4 @@ bst.insert(100)
 print(bst.inorder_successor())
 print(bst.pre_order())
 print(bst.post_order())
+print(bst.bfs_traversal())
