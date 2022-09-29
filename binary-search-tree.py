@@ -46,6 +46,37 @@ class BST:
                 break
         return inoder_list
 
+    def pre_order(self):
+        preorder_st = []
+        preorder_ll = []
+        temp = self.root
+        while True:
+            if temp is not None:
+                preorder_st.append(temp)
+                preorder_ll.append(temp.value)
+                temp = temp.left
+            elif preorder_st:
+                temp = preorder_st.pop()
+                temp = temp.right
+            else:
+                break
+        return preorder_ll
+
+    def post_order(self):
+        postorder_st = []
+        postorder_ll = []
+        temp = self.root
+        postorder_st.append(temp)
+        while postorder_st:
+            temp = postorder_st.pop()
+            postorder_ll.append(temp.value)
+            if temp.left:
+                postorder_st.append(temp.left)
+            if temp.right:
+                postorder_st.append(temp.right)
+        
+        postorder_ll = postorder_ll[::-1]
+        return postorder_ll
 
     def find_node(self,value): ##function returns a node if it exists in the tree when value is passed to it
         temp = self.root
@@ -119,6 +150,6 @@ bst.insert(5)
 bst.insert(27)
 bst.insert(35)
 bst.insert(100)
-print(bst.delete_node(30).value)
-print(bst.root.left.value)
-print(bst.root.left.right.left.value)
+print(bst.inorder_successor())
+print(bst.pre_order())
+print(bst.post_order())
