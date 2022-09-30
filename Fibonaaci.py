@@ -1,19 +1,28 @@
-def fib(n):
-  a=0
-  b=1
-  if n<0:
-    print("incorrect output")
-  elif n==0:
-    print (a)
-
-  elif n==1:
-    print (b)
-
+##program to return fibonacci series of n-number
+def fib(n): ##using recusrion
+  if n<=1:
+    return n
   else:
-    for i in range(2,n):
-      c=a+b
-      a=b
-      b=c
-    print(b)
+    return (fib(n-1) + fib(n-2))
+  
+def fib_series(n):
+  output_list = []
+  for i in range(n):
+    fib_number = fib(i)
+    output_list.append(fib_number)
+  return output_list
 
-fib(10)
+def fib_iterative(n):
+  if n == 0:
+    return [0]
+  if n == 1:
+    return [0,1]
+  output_list = [0,1]
+  if n>=2:
+    for i in range(2, n): ##since we already have first 2 numbers in the list
+      temp = output_list[i-1] + output_list[i-2]
+      output_list.append(temp)
+  return output_list
+
+print(fib_series(15))
+print(fib_iterative(15))
